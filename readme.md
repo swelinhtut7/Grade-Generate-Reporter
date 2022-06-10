@@ -12,7 +12,13 @@ Given below are our key objectives and the scope of this project:
 
 ### Methodology
 
-We developed a system using Python (Flask), AJAX, Javascript, HTML and CSS (Bootstrap) mainly.
+We developed a system using 
+* Python (Flask) 
+* MySQL
+* AJAX 
+* Javascript
+* HTML and CSS 
+* Bootstrap
 
 ***
 By [Krishna](https://github.com/swelinhtut7) & [Lexi](https://github.com/lexizone)
