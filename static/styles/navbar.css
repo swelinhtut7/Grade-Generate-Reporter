@@ -1,0 +1,73 @@
+nav {
+    margin: 0px auto 0;
+    position: relative;
+    height: 73px;
+    background-color: #3c517e;
+    border-radius: 0px;
+    font-size: 0;
+    display: inline;
+    border: 1px solid black;
+}
+
+.logo img {
+    height: auto;
+    width: auto;
+    max-height: 40%;
+    max-width: 35%;
+    overflow: hidden;
+}
+
+nav a {
+    line-height: 73px;
+    height: 100%;
+    font-size: 14px;
+    position: relative;
+    text-decoration:wavy;
+    text-transform: uppercase;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    float:left;
+}
+
+nav a:hover{
+    display: block;
+    transition: transform 250ms;
+    font-size: 16px;
+    color: transparent;
+    color: rgb(255, 255, 0);
+    transition: background 0.25s;
+    text-decoration:wavy;
+}
+
+
+a:nth-child(1) {
+    width: 200px;
+}
+
+/* first */
+a:nth-child(2n) {
+    width: 150px;
+}
+
+a:nth-child(2n-1) {
+    width: 200px;
+}
+
+/* last */
+a:nth-child(4n-1) {
+    width: 200px;
+}
+
+a:nth-child(5n) {
+    width: 200px;
+}
+
+a:nth-child(6) {
+    width: 200px;
+}
+
+a.active{
+    color: rgb(255, 255, 0);
+    border-bottom: 5px solid rgb(228, 228, 16);
+}

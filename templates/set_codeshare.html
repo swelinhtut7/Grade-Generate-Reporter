@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Grade Report Generator</title>
+
+  <link rel="stylesheet" type="text/css" href="../static/styles/dropdown.css">
+  <link rel="stylesheet" type="text/css" href="../static/styles/navbar.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+  <form>
+    <nav>
+      <div class="logo"><a href=""><img src="../static/images/logo1.png"></a></div>
+      <form>
+        <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">Subject
+          List</a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="BSCS_Subject_List">BSCS</a>
+          <a class="dropdown-item" href="BSIT_Subject_List">BSIT</a>
+        </div>
+      </form>
+
+      <form>
+        <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">Offered
+          Subjects</a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="/BSCS_Offer_Subject">BSCS</a>
+          <a class="dropdown-item" href="/BSIT_Offer_Subject">BSIT</a>
+        </div>
+      </form>
+
+      <form>
+        <a class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+          href="">Codeshare Subjects</a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="/Set_Codeshare">Set Codeshare</a>
+          <a class="dropdown-item" href="/search">Search Codeshare</a>
+        </div>
+      </form>
+
+      <form>
+        <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">Meeting</a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="BSCS_Meeting">BSCS</a>
+          <a class="dropdown-item" href="BSIT_Meeting">BSIT</a>
+        </div>
+      </form>
+
+      <form>
+        <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">Committee
+          Setup</a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="BSCS_Committee_Setup">BSCS</a>
+          <a class="dropdown-item" href="BSIT_Committee_Setup">BSIT</a>
+        </div>
+      </form>
+    </nav>
+  </form>
+
+  <center>
+    <div>
+      {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %}
+      <div class="alert alert-danger" role="alert">{{ message }}</div>
+      {% endfor %} {% endif %} {% endwith %}
+    </div>
+  </center>
+  <br>
+
+  <div class="container">
+    <br>
+    <form method="POST" action="{{ url_for('Set_Codeshare') }}">
+      <h2 class="title">Set Codeshare Subject</h2><br>
+
+      <div class="form-group form-inline">
+        <label class="sem-header">Enter Semester: &nbsp;&nbsp;&nbsp;</label>
+        <input type="text" class="form-control sem-searchbox" id="semester" name="semester" placeholder="Example: 1/2022 " required pattern="[1-3]+/+[0-9]{4}">
+      </div>
+
+      <select name="search_filter" id="search_filter" class="form-control choose-subject" style="width: 85%;">
+        <option value="">Choose Subject to set codeshare</option>';
+        {% for row in subjects %}
+        <option value="{{ row.subjectcode }}">{{ row.subjectcode }}&nbsp;-&nbsp;{{ row.subjectname }}</option>';
+        {% endfor %}
+      </select>
+
+      <input type="hidden" name="hidden_value" id="hidden_value" />
+      <div style="clear:both"></div>
+      <br>
+      <center>
+        <div class="table-responsive">
+          <table class="table table-hover table-bordered" style="width: 85%;">
+            <thead>
+              <tr class="table-header">
+                <th style="width: 5%;"></th>
+                <th style="width: 20%; text-align: center;">Subject Code</th>
+                <th style="width: 50%;">Subject Name</th>
+                <th style="width: 5%;">Program</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for subjectdata in subjectlists %}
+              <tr>
+                <td><input type="checkbox" value="{{ subjectdata.subjectcode }}" name="checkbox" class="checkthis" />
+                </td>
+                <td>{{subjectdata['subjectcode']}}</td>
+                <td>{{subjectdata['subjectname']}}</td>
+                <td style="text-align: center;">{{subjectdata['program']}}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <br><br>
+        <div>
+          <button type="submit" class="btn btn-primary"> SAVE </button>
+        </div>
+      </center>
+      <br>
+  </div>
+  </form>
+
+</body>
+
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Grade Report Generator</title>
+
+  <link rel="stylesheet" type="text/css" href="../static/styles/subject_list.css">
+  <link rel="stylesheet" type="text/css" href="../static/styles/navbar.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+  <form>
+    <nav>
+      <div class="logo"><a href=""><img src="../static/images/logo1.png"></a></div>
+      <form>
+        <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">Subject
+          List</a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="BSCS_Subject_List">BSCS</a>
+          <a class="dropdown-item" href="BSIT_Subject_List">BSIT</a>
+        </div>
+      </form>
+
+      <form>
+        <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">Offered
+          Subjects</a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="/BSCS_Offer_Subject">BSCS</a>
+          <a class="dropdown-item" href="/BSIT_Offer_Subject">BSIT</a>
+        </div>
+      </form>
+
+      <form>
+        <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">Codeshare
+          Subjects</a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="/Set_Codeshare">Set Codeshare</a>
+          <a class="dropdown-item" href="/search">Search Codeshare</a>
+        </div>
+      </form>
+
+      <form>
+        <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">Meeting</a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="BSCS_Meeting">BSCS</a>
+          <a class="dropdown-item" href="BSIT_Meeting">BSIT</a>
+        </div>
+      </form>
+
+      <form>
+        <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">Committee
+          Setup</a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="BSCS_Committee_Setup">BSCS</a>
+          <a class="dropdown-item" href="BSIT_Committee_Setup">BSIT</a>
+        </div>
+      </form>
+    </nav>
+  </form>
+
+  <form action="/BSIT_Show_Grade">
+    <button type="submit" class="btn btn-outline-dark back"><i class="fa fa-arrow-left"></i> Back</button>
+  </form>
+
+  <div>
+    {% for row in subject_name_result %}
+    <h2 class='set-grade-heading'>Subject ID & Name: {{row.subjectcode}}&nbsp;{{row.subjectname}}</h2>
+    {% endfor %}
+  </div>
+  <br>
+
+  <center>
+    <div>
+      {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %}
+      <div class="alert alert-danger" role="alert">{{ message }}</div>
+      {% endfor %} {% endif %} {% endwith %}
+    </div>
+  </center>
+
+  <form method="POST" action="{{ url_for('BSIT_SetGrade') }}">
+    {% for row in show_gradeRange %}
+    <table class="table table-bordered grade-change-table" style="width: 50%;">
+      <tr class="changegrade-table-header">
+        <th style="width: 18%;">Minimum Range</th>
+        <th style="width: 18%;">Maximum Range</th>
+        <th style="width: 15%;">Grade</th>
+        <th style="width: 22%;">Number of Students</th>
+      </tr>
+      <tr>
+        <td><input class="input1" type="number" id="A_min" name="A_min" placeholder="{{row['A_min']}}"
+            onkeyup='saveValue(this);'><input type="submit" style="display: none;"></td>
+        <td>100</td>
+        <td>A</td>
+        <td><input class="input1" type="number" name="A_students" id="A_students" placeholder="{{row['A_students']}}"
+            onkeyup='saveValue(this);' /></td>
+      </tr>
+      <tr>
+        <td><input class="input1" type="number" id="A_minus_min" name="A_minus_min" placeholder="{{row['A_minus_min']}}"
+            onkeyup='saveValue(this);'></td>
+        <td onkeyup='saveValue(this);'> {{ A_minus_max }} </td>
+        <td>A-</td>
+        <td><input class="input1" type="number" name="A_minus_students" id="A_minus_students"
+            placeholder="{{row['A_minus_students']}}" onkeyup='saveValue(this);' /></td>
+      </tr>
+      <tr>
+        <td><input class="input1" type="number" id="B_plus_min" name="B_plus_min" onkeyup='saveValue(this);'
+            placeholder="{{row['B_plus_min']}}"></td>
+        <td onkeyup='saveValue(this);'>{{ B_plus_max }}</td>
+        <td>B+</td>
+        <td><input class="input1" type="number" name="B_plus_students" id="B_plus_students"
+            placeholder="{{row['B_plus_students']}}" onkeyup='saveValue(this);' /></td>
+      </tr>
+      <tr>
+        <td><input class="input1" type="number" id="B_min" name="B_min" onkeyup='saveValue(this);'
+            placeholder="{{row['B_min']}}" onkeyup='saveValue(this);'>
+        </td>
+        <td onkeyup='saveValue(this);'>{{ B_max }}</td>
+        <td>B</td>
+        <td><input class="input1" type="number" name="B_students" id="B_students" placeholder="{{row['B_students']}}"
+            onkeyup='saveValue(this);' /></td>
+      </tr>
+      <tr>
+        <td><input class="input1" type="number" id="B_minus_min" name="B_minus_min" onkeyup='saveValue(this);'
+            placeholder="{{row['B_minus_min']}}"></td>
+        <td onkeyup='saveValue(this);'>{{ B_minus_max }}</td>
+        <td>B-</td>
+        <td><input class="input1" type="number" name="B_minus_students" id="B_minus_students"
+            placeholder="{{row['B_minus_students']}}" onkeyup='saveValue(this);' /></td>
+      </tr>
+      <tr>
+        <td><input class="input1" type="number" id="C_plus_min" name="C_plus_min" onkeyup='saveValue(this);'
+            placeholder="{{row['C_plus_min']}}"></td>
+        <td onkeyup='saveValue(this);'>{{ C_plus_max }}</td>
+        <td>C+</td>
+        <td><input class="input1" type="number" name="C_plus_students" id="C_plus_students"
+            placeholder="{{row['C_plus_students']}}" onkeyup='saveValue(this);' /></td>
+      </tr>
+      <tr>
+        <td><input class="input1" type="number" id="C_min" name="C_min" onkeyup='saveValue(this);'
+            placeholder="{{row['C_min']}}">
+        </td>
+        <td onkeyup='saveValue(this);'>{{ C_max }}</td>
+        <td>C</td>
+        <td><input class="input1" type="number" name="C_students" id="C_students" placeholder="{{row['C_students']}}"
+            onkeyup='saveValue(this);' /></td>
+      </tr>
+      <tr>
+        <td><input class="input1" type="number" id="C_minus_min" name="C_minus_min" onkeyup='saveValue(this);'
+            placeholder="{{row['C_minus_min']}}"></td>
+        <td onkeyup='saveValue(this);'>{{ C_minus_max }}</td>
+        <td>C-</td>
+        <td><input class="input1" type="number" name="C_minus_students" id="C_minus_students"
+            placeholder="{{row['C_minus_students']}}" onkeyup='saveValue(this);' /></td>
+      </tr>
+      <tr>
+        <td><input class="input1" type="number" id="D_min" name="D_min" onkeyup='saveValue(this);'
+            placeholder="{{row['D_min']}}">
+        </td>
+        <td onkeyup='saveValue(this);'>{{ D_max }}</td>
+        <td>D</td>
+        <td><input class="input1" type="number" name="D_students" id="D_students" placeholder="{{row['D_students']}}"
+            onkeyup='saveValue(this);' /></td>
+      </tr>
+      <tr>
+        <td>0</td>
+        <td onkeyup='saveValue(this);'>{{ F_max }}</td>
+        <td>F</td>
+        <td><input class="input1" type="number" name="F_students" id="F_students" placeholder="{{row['F_students']}}"
+            onkeyup='saveValue(this);' /></td>
+      </tr>
+      <tr>
+        <td>-</td>
+        <td>-</td>
+        <td>I</td>
+        <td><input class="input1" type="number" name="I_students" id="I_students" placeholder="{{row['I_students']}}"
+            onkeyup='saveValue(this);' /></td>
+      </tr>
+      <tr>
+        <td>-</td>
+        <td>-</td>
+        <td>W</td>
+        <td><input class="input1" type="number" name="W_students" id="W_students" placeholder="{{row['W_students']}}"
+            onkeyup='saveValue(this);' /></td>
+      </tr>
+    </table>
+    {% endfor %}
+  </form>
+  <br>
+
+  <center>
+    <form action="/BSIT_Meeting_Detail">
+      <button type="submit" id='btn_change' class="btn btn-primary"> SAVE </button>
+    </form>
+  </center>
+
+  <br>
+
+  <script>
+
+    document.getElementById("A_min").value = getSavedValue("A_min");
+    document.getElementById("A_minus_min").value = getSavedValue("A_minus_min");
+    document.getElementById("B_plus_min").value = getSavedValue("B_plus_min");
+    document.getElementById("B_min").value = getSavedValue("B_min");
+    document.getElementById("B_minus_min").value = getSavedValue("B_minus_min");
+    document.getElementById("C_plus_min").value = getSavedValue("C_plus_min");
+    document.getElementById("C_min").value = getSavedValue("C_min");
+    document.getElementById("C_minus_min").value = getSavedValue("C_minus_min");
+    document.getElementById("D_min").value = getSavedValue("D_min");
+
+    document.getElementById("A_students").value = getSavedValue("A_students");
+    document.getElementById("A_minus_students").value = getSavedValue("A_minus_students");
+    document.getElementById("B_plus_students").value = getSavedValue("B_plus_students");
+    document.getElementById("B_students").value = getSavedValue("B_students");
+    document.getElementById("B_minus_students").value = getSavedValue("B_minus_students");
+    document.getElementById("C_plus_students").value = getSavedValue("C_plus_students");
+    document.getElementById("C_students").value = getSavedValue("C_students");
+    document.getElementById("C_minus_students").value = getSavedValue("C_minus_students");
+    document.getElementById("D_students").value = getSavedValue("D_students");
+    document.getElementById("F_students").value = getSavedValue("F_students");
+    document.getElementById("I_students").value = getSavedValue("I_students");
+    document.getElementById("W_students").value = getSavedValue("W_students");
+
+    //Save the value function - save it to localStorage as (ID, VALUE)
+    function saveValue(e) {
+      var id = e.id;  // get the sender's id to save it . 
+      var val = e.value; // get the value. 
+      localStorage.setItem(id, val);// Every time user writing something, the localStorage's value will override . 
+    }
+
+    //get the saved value function - return the value of "v" from localStorage. 
+    function getSavedValue(v) {
+      if (!localStorage.getItem(v)) {
+        return "";// You can change this to your defualt value. 
+      }
+      return localStorage.getItem(v);
+    }
+
+    // Clear localstoreade after click saved
+    document.addEventListener("DOMContentLoaded", function (event) {
+      const btn_change = document.getElementById("btn_change");
+      btn_change.addEventListener('click', function () {
+        localStorage.clear();
+        location.reload();
+      }, false);
+    });
+  </script>
+
+</body>
+</page>
+
+</html>

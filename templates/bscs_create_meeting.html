@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<page size="A3">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Grade Generator</title>
+
+        <link rel="stylesheet" type="text/css" href="../static/styles/form.css">
+        <link rel="stylesheet" type="text/css" href="../static/styles/committesetup.css">
+        <link rel="stylesheet" type="text/css" href="../static/styles/meetingcommittee.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    </head>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            var actions = $("table td:last-child").html();
+            // Append table with add row form on add new button click
+            $(".add-new").click(function () {
+                $(this).attr("disabled", "disabled");
+                var index = $("table tbody tr:last-child").index();
+                var row = '<tr>' +
+                    '<td><input type="text" class="form-control" name="bscs_committe_name" id="bscs_committe_name"></td>' +
+                    '<td><input type="text" class="form-control" name="bscs_committe_role" id="bscs_committe_role"></td>' +
+                    '<td>' + actions + '</td>' +
+                    '</tr>';
+                $("table").append(row);
+                $("table tbody tr").eq(index + 1).find(".add, .edit, .delete").toggle();
+                $('[data-toggle="tooltip"]').tooltip();
+
+            });
+
+            // Add row on add button click
+            $(document).on("click", ".add", function () {
+                var empty = false;
+                var input = $(this).parents("tr").find('input[type="text"]');
+                input.each(function () {
+                    if (!$(this).val()) {
+                        $(this).addClass("error");
+                        empty = true;
+                    } else {
+                        $(this).removeClass("error");
+                    }
+                });
+                var bscs_committe_name = $("#bscs_committe_name").val();
+                var bscs_committe_role = $("#bscs_committe_role").val();
+                $.post("/BSCS_Add_Meeting_Committee", {
+                    bscs_committe_name: bscs_committe_name,
+                    bscs_committe_role: bscs_committe_role,
+                }, function (data) {
+                    $("#displaymessage").html(data);
+                    $("#displaymessage").show();
+                    location.reload();
+                });
+                $(this).parents("tr").find(".error").first().focus();
+                if (!empty) {
+                    input.each(function () {
+                        $(this).parent("td").html($(this).val());
+                    });
+                    $(this).parents("tr").find(".add, .edit").toggle();
+                    $(".add-new").removeAttr("disabled");
+                }
+            });
+
+            // update rec row on edit button click
+            $(document).on("click", ".update", function () {
+                var id = $(this).attr("id");
+                var string = id;
+                var bscs_committe_name = $("#bscs_committe_name").val();
+                var bscs_committe_role = $("#bscs_committe_role").val();
+                $.post("/BSCS_Edit_Meeting_Committee", {
+                    string: string,
+                    bscs_committe_name: bscs_committe_name,
+                    bscs_committe_role: bscs_committe_role,
+                }, function (data) {
+                    $("#displaymessage").html(data);
+                    $("#displaymessage").show();
+                    location.reload();
+                });
+            });
+
+            // Edit row on edit button click
+            $(document).on("click", ".edit", function () {
+                $(this).parents("tr").find("td:not(:last-child)").each(function (i) {
+                    if (i == '0') {
+                        var idname = 'bscs_committe_name';
+                    } else if (i == '1') {
+                        var idname = 'bscs_committe_role';
+                    } else { }
+                    $(this).html('<input type="text" name="updaterec" id="' + idname + '" class="form-control" value="' + $(this).text() + '">');
+                });
+                $(this).parents("tr").find(".add, .edit").toggle();
+                $(".add-new").attr("disabled", "disabled");
+                $(this).parents("tr").find(".add").removeClass("add").addClass("update");
+            });
+
+            // Delete row on delete button click
+            $(document).on("click", ".delete", function () {
+                var result = confirm('Are you sure you want to delete this item');
+                if (result) {
+                    $(this).parents("tr").remove();
+                    $(".add-new").removeAttr("disabled");
+                    var id = $(this).attr("id");
+                    var string = id;
+                    $.post("/BSCS_Delete_Meeting_Committee", {
+                        string: string
+                    }, function (data) {
+                        $("#displaymessage").html(data);
+                        $("#displaymessage").show();
+                    });
+                }
+                else
+                    return false;
+            });
+        });
+    </script>
+
+    <body>
+        <p class="left">Assumption University</p>
+        <p class="right">Assumption University</p>
+        <br><br><br><br>
+        <center>
+            <div>
+                {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %}
+                <div class="alert alert-danger" role="alert">{{ message }}</div>
+                {% endfor %} {% endif %} {% endwith %}
+            </div>
+        </center>
+        <img src="../static/images/au.png" alt="logo" class="img-logo">
+
+        <p class="center">
+            The Meeting of Academic Standard Committees
+            <br>
+            Bachelor of Science Program in Computer Science
+        </p>
+        <br>
+
+        <form action="{{ url_for('BSCS_Create_Meeting') }}" method="POST">
+            {% for data in MeetingDate %}
+            <ul class="positions">
+                <dt> Meeting Number : &nbsp;<input type="text" id="meetingnumber" name="meetingnumber" required
+                        placeholder="{{data['meetingnumber']}}"> </dt>
+                <dt> Semester :
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+                        type="text" id="semester" name="semester" placeholder="{{data['semester']}}" required></dt>
+                <dt> Date :
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+                        type="text" id="subject" name="date" placeholder="{{data['date']}}" required> </dt>
+                <dt> Time :
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+                        type="text" id="date" name="time" placeholder="{{data['time']}}" required> </dt>
+                <dt> Venue :
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+                        type="text" id="time" name="venue" placeholder="{{data['venue']}}" required> </dt>
+            </ul>
+            <br><br><br>
+            {% endfor %}
+            <h3 class="committe-heading-Cmeeting">
+                BSCS Committees
+            </h3>
+            <div class="col-sm-4">
+                <button type="button" class="btn btn-primary add-new location"><i class="fa fa-plus"></i> Add New </button>
+            </div>
+            <div class='btn btn-info' id="displaymessage" style="display:none;width:100%;margin-top:10px;">
+            </div>
+
+            <table class="table table-borderless committe-table" style="width: 60%;">
+                <thead style='height:50px; font-size:15px;'>
+                    <tr>
+                        <th>Member Name</th>
+                        <th>Member Role</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in bscs_committe %}
+                    <tr style='font-size:14px;'>
+                        <td>{{row.committee_name}}</td>
+                        <td>{{row.committee_role}}</td>
+                        <td>
+                            <div class="grid-container1">
+                                <a class="add" data-toggle="tooltip" id="{{row.committee_name}}"><i
+                                        class="fa fa-user-plus add1"></i></a>
+                                <a class="edit" data-toggle="tooltip" id="{{row.committee_name}}"><i
+                                        class="fa fa-pencil edit1"></i></a>
+                                <a class="delete" data-toggle="tooltip" id="{{row.committee_name}}"><i
+                                        class="fa fa-trash-o del1"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <center>
+                <button type="submit" class="btn btn-primary meeting-save">Save</button>
+            </center>
+        </form>
+        <center>
+            <form action="/BSCS_Meeting" method="POST">
+                <button type="submit" class="btn btn-primary meeting-cancel">Cancel</button>
+            </form>
+        </center>
+        <br><br>
+
+    </body>
+</page>
+
+</html>

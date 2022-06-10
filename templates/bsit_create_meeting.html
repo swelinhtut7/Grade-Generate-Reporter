@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<page size="A3">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Grade Generator</title>
+
+        <link rel="stylesheet" type="text/css" href="../static/styles/form.css">
+        </script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    </head>
+
+    <body>
+
+        <p class="left">Assumption University</p>
+        <p class="right">Assumption University</p>
+        <br>
+        <center>
+            <div>
+                {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %}
+                <div class="alert alert-danger" role="alert">{{ message }}</div>
+                {% endfor %} {% endif %} {% endwith %}
+            </div>
+        </center>
+        <br><br><br><br>
+        <img src="../static/images/au.png" alt="logo" class="img-logo">
+
+        <p class="center">
+            The Meeting of Academic Standard Committees
+            <br>
+            Bachelor of Science Program in Information Technology
+        </p>
+        <br>
+
+        <form action="{{ url_for('BSIT_Create_Meeting') }}" method="POST">
+
+            <ul class="positions">
+                <dt> Meeting Number : &nbsp;<input type="text" id="meetingnumber" name="meetingnumber" required> </dt>
+                <dt> Semester :
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+                        type="text" id="semester" name="semester" required></dt>
+                <dt> Date :
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+                        type="text" id="subject" name="date" required> </dt>
+                <dt> Time :
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+                        type="text" id="date" name="time" required> </dt>
+                <dt> Venue :
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input
+                        type="text" id="time" name="venue" required> </dt>
+            </ul>
+            <br><br>
+
+            <h3 class="committe-heading-Cmeeting">
+                BSIT Committees
+            </h3>
+
+            <table class="table table-borderless committe-table" style="width: 80%;">
+                <thead>
+                    <tr>
+                        <th style="width: 15%"></th>
+                        <th style="width: 10%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in bsit_committe %}
+                    <tr>
+                        <td>{{row.committee_name}}</td>
+                        <td>{{row.committee_role}}</td>
+                    </tr>
+                    {% endfor %}
+            </table>
+            <center>
+                <button type="submit" class="btn btn-primary meeting-save">Save</button>
+            </center>
+        </form>
+        <center>
+            <form action="/BSIT_Meeting" method="POST">
+                <button type="submit" class="btn btn-primary meeting-cancel">Cancel</button>
+            </form>
+        </center>
+        <br><br>
+    </body>
+</page>
+
+</html>

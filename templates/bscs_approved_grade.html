@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<page size="A1">
+  <html lang="en">
+
+  <head>
+
+    <meta charset="UTF-8">
+    <title>Grade Report Generator</title>
+
+    <link rel="stylesheet" type="text/css" href="../static/styles/form.css">
+    <link rel="stylesheet" type="text/css" href="../static/styles/subject_list.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script type="text/javascript" src="{{ url_for('static',filename='csitcheckgrade.js') }}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"></script>
+
+    <script>
+      function printFunction() {
+        window.print();
+      }
+
+      /* function onlyOne(checkbox) {
+        var checkboxes = document.getElementsByName('check')
+        checkboxes.forEach((item) => {
+          if (item !== checkbox) item.checked = false
+        })
+      } */
+
+    </script>
+
+  </head>
+
+  <body>
+
+    <div>
+
+      <img src="../static/images/au.png" alt="logo" class="img-final-logo">
+      <p class="final-left">Assumption University</p>
+      <p class="final-right">Assumption University</p>
+
+      {% for name in subject_name_result %}
+      <p class="final-position1">
+        Consideration of the examination result in semester {{ meeting_details }}.
+        Academic Standard Committees (Bachelor of Science Program in Computer Science).
+        {% for data in meeting_result %}
+        Meeting number <u>{{data.meetingnumber}}</u> on <u>{{data.date}}</u>{% endfor %} have the conclusion
+        to the report of examination results for the (subject code - {{name.subjectcode}} section -
+        {{name.section}}&nbsp;{{name.subjectname}}{% endfor %}) and with the Codeshare ({% for row in result%}
+        {{row.codeshare_subject,row.subjectname}}
+        {% endfor %}) in which the instructor proposed as follows:
+      </p>
+      <br>
+    </div>
+
+    <form action="" method="POST">
+
+      {% for row in defult_grade_result %}
+      <table class="table final-grade-range-table1" style="width: 75%;">
+        <tr class="final-table-header">
+          <th style="width:20%;"> Range</th>
+          <th style="width:10%;">Grade</th>
+          <th style="width:20%;">Number of Students</th>
+        </tr>
+
+        <tr>
+          <td>{{row['A_min']}} - {{row['A_max']}}</td>
+          <td>A</td>
+          <td>{{row['A_students']}}</td>
+        </tr>
+        <tr>
+          <td>{{row['A_minus_min']}} - {{row['A_minus_max']}}</td>
+          <td>A-</td>
+          <td>{{row['A_minus_students']}}</td>
+        </tr>
+        <tr>
+          <td>{{row['B_plus_min']}} - {{row['B_plus_max']}}</td>
+          <td>B+</td>
+          <td>{{row['B_plus_students']}}</td>
+        </tr>
+        <tr>
+          <td>{{row['B_min']}} - {{row['B_max']}}</td>
+          <td>B</td>
+          <td>{{row['B_students']}}</td>
+        </tr>
+        <tr>
+          <td>{{row['B_minus_min']}} - {{row['B_minus_min']}}</td>
+          <td>B-</td>
+          <td>{{row['B_minus_students']}}</td>
+        </tr>
+        <tr>
+          <td>{{row['C_plus_min']}} - {{row['C_plus_max']}}</td>
+          <td>C+</td>
+          <td>{{row['C_plus_students']}}</td>
+        </tr>
+        <tr>
+          <td>{{row['C_min']}} - {{row['C_max']}}</td>
+          <td>C</td>
+          <td>{{row['C_students']}}</td>
+        </tr>
+        <tr>
+          <td>{{row['C_minus_min']}} - {{row['C_minus_max']}}</td>
+          <td>C-</td>
+          <td>{{row['C_minus_students']}}</td>
+        </tr>
+        <tr>
+          <td>{{row['D_min']}} - {{row['D_max']}}</td>
+          <td>D</td>
+          <td>{{row['D_students']}}</td>
+        </tr>
+        <tr>
+          <td>{{row['F_min']}} - {{row['F_max']}}</td>
+          <td>F</td>
+          <td>{{row['F_students']}}</td>
+        </tr>
+        <tr>
+          <td>-</td>
+          <td>I</td>
+          <td>{{row['I_students']}}</td>
+        </tr>
+        <tr>
+          <td>-</td>
+          <td>W</td>
+          <td>{{row['W_students']}}</td>
+        </tr>
+        <tr>
+          <td>-</td>
+          <td><b>Total</b></td>
+          <td>{{ defult_total_students }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+
+      <center>
+        <div>
+          <i class="fa fa-check-square" style="color: green"></i> {{ modified }}
+        </div>
+      </center>
+
+      <!-- <div class="form-check appropriated">
+        <input class="form-check-input" type="checkbox" name="check" id="defaultCheck1" onclick="onlyOne(this)">
+        <label class="form-check-label" for="defaultCheck1">
+          is appropriated
+        </label>
+      </div>
+      <div class="form-check modification">
+        <input class="form-check-input" type="checkbox" name="check" id="defaultCheck2" onclick="onlyOne(this)">
+        <label class="form-check-label" for="defaultCheck2">
+          Modified
+        </label>
+      </div> -->
+
+      <form action="" method="POST">
+        {% for row in modify_grade_result %}
+        <table class="table final-grade-range-table2 h-25 d-inline-block" style="width: 75%;">
+          <tr class="final-table-header">
+            <th style="width:20%;"> Range</th>
+            <th style="width:10%;">Grade</th>
+            <th style="width:20%;">Number of Students</th>
+          </tr>
+
+          <tr>
+            <td>{{row['A_min']}} - {{row['A_max']}}</td>
+            <td>A</td>
+            <td>{{row['A_students']}}</td>
+          </tr>
+          <tr>
+            <td>{{row['A_minus_min']}} - {{row['A_minus_max']}}</td>
+            <td>A-</td>
+            <td>{{row['A_minus_students']}}</td>
+          </tr>
+          <tr>
+            <td>{{row['B_plus_min']}} - {{row['B_plus_max']}}</td>
+            <td>B+</td>
+            <td>{{row['B_plus_students']}}</td>
+          </tr>
+          <tr>
+            <td>{{row['B_min']}} - {{row['B_max']}}</td>
+            <td>B</td>
+            <td>{{row['B_students']}}</td>
+          </tr>
+          <tr>
+            <td>{{row['B_minus_min']}} - {{row['B_minus_min']}}</td>
+            <td>B-</td>
+            <td>{{row['B_minus_students']}}</td>
+          </tr>
+          <tr>
+            <td>{{row['C_plus_min']}} - {{row['C_plus_max']}}</td>
+            <td>C+</td>
+            <td>{{row['C_plus_students']}}</td>
+          </tr>
+          <tr>
+            <td>{{row['C_min']}} - {{row['C_max']}}</td>
+            <td>C</td>
+            <td>{{row['C_students']}}</td>
+          </tr>
+          <tr>
+            <td>{{row['C_minus_min']}} - {{row['C_minus_max']}}</td>
+            <td>C-</td>
+            <td>{{row['C_minus_students']}}</td>
+          </tr>
+          <tr>
+            <td>{{row['D_min']}} - {{row['D_max']}}</td>
+            <td>D</td>
+            <td>{{row['D_students']}}</td>
+          </tr>
+          <tr>
+            <td>{{row['F_min']}} - {{row['F_max']}}</td>
+            <td>F</td>
+            <td>{{row['F_students']}}</td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td>I</td>
+            <td>{{row['I_students']}}</td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td>W</td>
+            <td>{{row['W_students']}}</td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td><b>Total</b></td>
+            <td>{{ modify_total_students }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </form>
+
+      <br><br>
+      <ul class="final-committe-member">
+        <li>Signature&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________ &nbsp;&nbsp;Chairperson</li>
+        <li>Signature&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________ &nbsp;&nbsp;Member</li>
+        <li>Signature&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________ &nbsp;&nbsp;Member</li>
+      </ul>
+
+      <ul class="final-committe-member">
+        <li>Signature &nbsp;&nbsp;&nbsp;&nbsp;_______________________ &nbsp;&nbsp;Member</li>
+        <li>Signature &nbsp;&nbsp;&nbsp;&nbsp;_______________________ &nbsp;&nbsp;Member</li>
+        <li>Signature &nbsp;&nbsp;&nbsp;&nbsp;_______________________ &nbsp;&nbsp;Member</li>
+      </ul>
+
+      <center>
+        <form action='/BSCS_Meeting_Detail' method="POST">
+          <button type='submit' class="btn btn-primary final-page-btn1">Cancel</button>
+        </form>
+
+        <form action="{{ url_for('BSCS_Grade_Approved') }}" method="POST">
+          <button class="btn btn-primary final-page-btn2" type="submit" name="download" id="download" value="download"
+            onclick="printFunction()"> Download</button>
+        </form>
+      </center>
+      <br><br>
+
+  </body>
+</page>
+
+</html>

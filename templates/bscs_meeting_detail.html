@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Grade Report Generator</title>
+    <link rel="stylesheet" type="text/css" href="../static/styles/subject_list.css">
+    <link rel="stylesheet" type="text/css" href="../static/styles/navbar.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+    <script>
+        window.addEventListener('load', () => {
+            const meeting_details = sessionStorage.getItem('MEETING_DETAILS');
+
+            document.getElementById('result-meeting_details').innerHTML = meeting_details;
+        })
+    </script>
+
+</head>
+
+<body>
+
+    <form>
+        <nav>
+            <div class="logo"><a href=""><img src="../static/images/logo1.png"></a></div>
+            <form>
+                <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    href="">Subject List</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="BSCS_Subject_List">BSCS</a>
+                    <a class="dropdown-item" href="BSIT_Subject_List">BSIT</a>
+                </div>
+            </form>
+
+            <form>
+                <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    href="">Offered Subjects</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="/BSCS_Offer_Subject">BSCS</a>
+                    <a class="dropdown-item" href="/BSIT_Offer_Subject">BSIT</a>
+                </div>
+            </form>
+
+            <form>
+                <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    href="">Codeshare Subjects</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="/Set_Codeshare">Set Codeshare</a>
+                    <a class="dropdown-item" href="/search">Search Codeshare</a>
+                </div>
+            </form>
+
+            <form>
+                <a class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    href="">Meeting</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="BSCS_Meeting">BSCS</a>
+                    <a class="dropdown-item" href="BSIT_Meeting">BSIT</a>
+                </div>
+            </form>
+
+            <form>
+                <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    href="">Committee Setup</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="BSCS_Committee_Setup">BSCS</a>
+                    <a class="dropdown-item" href="BSIT_Committee_Setup">BSIT</a>
+                </div>
+            </form>
+        </nav>
+    </form>
+
+    {% for bscs_sem in meeting_sem_result %}
+    <h3 class='meeting-details-heading'>Offered Courses of BSCS in Semester {{bscs_sem['semester']}}</h3>
+    {% endfor %}
+
+    <div class="meeting-details-form">
+        <form action="/BSCS_Meeting" method="POST">
+            <button type="submit" class="btn btn-outline-dark back-meeting"><i class="fa fa-arrow-left"></i>
+                Back</button>
+        </form>
+
+        <div class="space"></div>
+        <ul>
+            <p> <b>Total Offered Courses : {{ total_cs }}</b> </p>
+            <p>Offered Subject : {{ subj_counted_res_cs_p }}</p>
+            <p>Offered Project : {{ subj_counted_res_cs_s }}</p>
+            <p>Approved Grade : {{ approved_cs_res }} </p>
+            <p>Changed Grade : {{ changed_cs_res }}</p>
+        </ul>
+    </div>
+
+    <form action="" method="POST">
+        <table class="table table-hover table-borderless mdetails-offered-course-table" style="width: 80%;">
+            <thead>
+                <tr class="heading-name">
+                    <th>Subject ID</th>
+                    <th style="width: 40%;">Subject Name</th>
+                    <th style="width: 10%; ">Section</th>
+                    <th style="width: 5%;">Approved</th>
+                    <th style="width: 5%;">Changed</th>
+                    <th style="width: 20%;">Grade Range</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in meeting_result %}
+                <tr>
+                    <td>{{row['subjectcode']}}</td>
+                    <td>{{row['subjectname']}}</td>
+                    <td style="text-align: center;">{{row['section']}}</td>
+                    <td style="text-align: center;">{{row['approved']}}</td>
+                    <td style="text-align: center;">{{row['changed']}}</td>
+                    <td style="text-align: center;">
+                        <button type="submit" class="btn btn-link btndetail" value="{{ row.subjectcode }}"
+                            name="cs_graderange" id="cs_graderange" style="font-size: 14px;" /><i
+                            class="fa fa-check btndetail" style="color: green"></i>Check Here</button>
+                    </td>
+                </tr>
+                {% endfor %}
+
+                {% for row in grade_result %}
+                <tr>
+                    <td>{{row['subjectcode']}}</td>
+                    <td>{{row['subjectname']}}</td>
+                    <td style="text-align: center;">{{row['section']}}</td>
+                    <td style="text-align: center;">{{row['approved']}}</td>
+                    <td style="text-align: center;">{{row['changed']}}</td>
+                    <td style="text-align:center;">
+                        <button type="submit" class="btn btn-link btndetail" value="{{ row.subjectcode }}"
+                            name="cs_graderange" id="cs_graderange" />Set Grade</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </form>
+    <br>
+</body>
+
+</html>

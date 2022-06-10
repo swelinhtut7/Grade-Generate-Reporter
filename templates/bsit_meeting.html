@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Grade Report Generator</title>
+
+    <link rel="stylesheet" type="text/css" href="../static/styles/meeting.css">
+    <link rel="stylesheet" type="text/css" href="../static/styles/navbar.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            // update rec row on edit button click
+            $(document).on("click", ".update", function () {
+                var id = $(this).attr("id");
+                var string = id;
+                var meetingnumber = $("#meetingnumber").val();
+                var semester = $("#semester").val();
+                var date = $("#date").val();
+                var time = $("#time").val();
+                var venue = $("#venue").val();
+
+                $.post("/BSIT_Edit_Meeting", {
+                    string: string,
+                    meetingnumber: meetingnumber,
+                    semester: semester,
+                    date: date,
+                    time: time,
+                    venue: venue,
+                }, function (data) {
+                    $("#displaymessage").html(data);
+                    $("#displaymessage").show();
+                    location.reload();
+                });
+            });
+
+            // Edit row on edit button click
+            $(document).on("click", ".edit", function () {
+                $(this).parents("tr").find("td:not(:last-child)").each(function (i) {
+                    if (i == '0') {
+                        var idname = 'meetingnumber';
+                    } else if (i == '1') {
+                        var idname = 'semester';
+                    } else if (i == '2') {
+                        var idname = 'date';
+                    } else if (i == '3') {
+                        var idname = 'time';
+                    } else if (i == '4') {
+                        var idname = 'venue';
+                    }
+                    else { }
+                    $(this).html('<input type="text" name="updaterec" id="' + idname + '" class="form-control" value="' + $(this).text() + '">');
+                });
+                $(this).parents("tr").find(".add, .edit").toggle();
+                $(".add-new").attr("disabled", "disabled");
+                $(this).parents("tr").find(".add").removeClass("add").addClass("update");
+            });
+
+            // Delete row on delete button click
+            $(document).on("click", ".delete", function () {
+                var result = confirm('Are you sure you want to delete this item');
+                if (result) {
+                    $(this).parents("tr").remove();
+                    $(".add-new").removeAttr("disabled");
+                    var id = $(this).attr("id");
+                    var string = id;
+                    $.post("/BSIT_Delete_Meeting", {
+                        string: string
+                    }, function (data) {
+                        $("#displaymessage").html(data);
+                        $("#displaymessage").show();
+                    });
+                }
+                else
+                    return false;
+            });
+        });
+
+    </script>
+
+</head>
+
+<body>
+
+    <form>
+        <nav>
+            <div class="logo"><a href=""><img src="../static/images/logo1.png"></a></div>
+            <form>
+                <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    href="">Subject List</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="BSCS_Subject_List">BSCS</a>
+                    <a class="dropdown-item" href="BSIT_Subject_List">BSIT</a>
+                </div>
+            </form>
+
+            <form>
+                <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    href="">Offered Subjects</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="/BSCS_Offer_Subject">BSCS</a>
+                    <a class="dropdown-item" href="/BSIT_Offer_Subject">BSIT</a>
+                </div>
+            </form>
+
+            <form>
+                <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    href="">Codeshare Subjects</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="/Set_Codeshare">Set Codeshare</a>
+                    <a class="dropdown-item" href="/search">Search Codeshare</a>
+                </div>
+            </form>
+
+            <form>
+                <a class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href=""> Meeting </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="BSCS_Meeting">BSCS</a>
+                    <a class="dropdown-item" href="BSIT_Meeting">BSIT</a>
+                </div>
+            </form>
+
+            <form>
+                <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    href="">Committee Setup</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="BSCS_Committee_Setup">BSCS</a>
+                    <a class="dropdown-item" href="BSIT_Committee_Setup">BSIT</a>
+                </div>
+            </form>
+        </nav>
+    </form>
+
+
+    <br>
+
+    <form class="form-inline" action="/BSIT_Create_Meeting">
+        <div class=" col-7">
+            <h2 class='it-h2style'>Meeting: Bachelor of Science in Information Technology</h2>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm meeting-btn"><i class="fa fa-plus" style="color: white;font-size: 12px;"></i> Create Meeting</button>
+        <div class='btn btn-info' id="displaymessage" style="display:none;width:100%;margin-top:10px;">
+        </div>
+    </form>
+
+    <br><br>
+    <br>
+    <form method="POST">
+        <table class="table border-bottom" style="width: 80%;">
+            <tr>
+                <th style="width:6%;">No.</th>
+                <th style="width:12%;">Semester</th>
+                <th style="width:12%;">Date</th>
+                <th style="width:10%;">Time</th>
+                <th style="width:12%;">Venue</th>
+                <th style="width:12%;">Details</th>
+            </tr>
+
+            {% for bsit_data in bsit_data_details %}
+            <tr>
+                <td>{{bsit_data['meetingnumber']}}</td>
+                <td>{{bsit_data['semester']}}</td>
+                <td>{{bsit_data['date']}}</td>
+                <td>{{bsit_data['time']}}</td>
+                <td>{{bsit_data['venue']}}</td>
+                <td>
+                    <button type="submit" class="btn btn-link det" value="{{ bsit_data.semester }}" name="meeting_details"
+                        id="meeting_details">Check details here..</button>
+                    <div class="grid-container">
+                        <a class="add" title="Add" data-toggle="tooltip" id="{{bsit_data.meetingnumber}}"><i
+                                class="fa fa-user-plus btn btn-primary aprimary"></i></a>
+                        <a class="edit" title="Edit" data-toggle="tooltip" id="{{bsit_data.meetingnumber}}"><i
+                                class="fa fa-pencil btn btn-primary eprimary"></i></a>
+                        <a class="delete" title="Delete" data-toggle="tooltip" id="{{bsit_data.meetingnumber}}"><i
+                                class="fa fa-trash-o btn btn-primary dprimary"></i></a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </form>
+<br>
+</body>
+
+</html>

@@ -1,0 +1,131 @@
+table {
+    table-layout: fixed;
+    position: absolute;
+    margin-left: 10%;
+    margin-top: -11%;
+}
+
+table tr td {
+    max-width: 80%;
+    overflow-x: auto;
+}
+
+.hidden {
+    display: none;
+}
+
+.search-heading1 {
+    font-size: 22px;
+    font-family: 'Times New Roman', Times, serif;
+    position: relative;
+    margin-top: 2.5%;
+    margin-left: 9%;
+    font-weight: bold;
+    color:#2c56b3;
+}
+
+.searchtable{
+    position: relative;
+    margin-top: 0%;
+}
+
+.search_heading2 {
+    position: relative;
+    margin-top: -6%;
+    margin-left: 10%;
+    font-size: 20px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:weight@100;200;300;400;500;600;700;800&display=swap");
+body {
+    background-color: #eee;
+    font-family: "Poppins", sans-serif;
+    font-weight: 300
+}
+
+.height {
+    height: 30vh
+}
+
+.search-icon{
+    position: absolute;
+    margin-top: 2%;
+    margin-left: -0.9%;
+}
+
+.search {
+    position: relative;
+    box-shadow: 0 0 40px rgba(51, 51, 51, .1);
+    margin-top: -10%;
+    margin-left: 16%;
+}
+
+.search input {
+    height: 43px;
+    text-indent: 25px;
+    border: 2px solid #d6d4d4
+}
+
+.search input:focus {
+    box-shadow: none;
+    border: 2px solid blue;
+}
+
+.search .fa-search {
+    position: absolute;
+    top: 10%;
+    left: 19px;
+}
+
+.search button {
+    position: absolute;
+    top: 5px;
+    right: 3px;
+    height: 36px;
+    width: 110px;
+    background: blue;
+    margin-top: -0.3%;
+}
+
+.sem-search {
+    position: absolute;
+    left: -19%;
+    margin-top: -5.2%;
+    height: 30px;
+    width: 240px;
+    text-indent: 20px;
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.table2 {
+    position: absolute;
+    margin-left: 20%;
+    top: 60%;
+}
+
+.h2style {
+    font-size: 24px;
+    font-family: 'Times New Roman', Times, serif;
+    /* font-family: 'Cherry Swash', cursive; */
+    font-weight: bold;
+    color: rgb(30, 30, 107);
+    position: relative;
+    margin-left: 2%;
+    margin-top: 3%;
+}
+
+.h2style2 {
+    font-size: 20px;
+    font-family: 'Times New Roman', Times, serif;
+    /* font-family: 'Cherry Swash', cursive; */
+    position: relative;
+    margin-left: 6%;
+    font-weight: bold;
+}
+
+form {
+    display: inline; 
+}
+

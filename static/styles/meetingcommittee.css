@@ -1,0 +1,32 @@
+.del1{
+    position: absolute;
+    margin-top: -80%; 
+    margin-left: -80%;
+}
+
+.add1{
+    position: absolute;
+    margin-top: -80%;
+    margin-left: -80%;
+}
+
+.edit1{
+    position: absolute;
+    margin-left: -3%;
+}
+
+.grid-container1 {
+    display: grid;
+    grid-template-columns: 5ch auto;
+}
+
+form {
+    display: inline; 
+}
+
+.add-new1{
+    position: absolute;
+    margin-left: 205%;
+    margin-top: -9%;
+    width: 120px;
+}

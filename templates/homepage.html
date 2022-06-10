@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Grade Report Generator</title>
+    <link rel="stylesheet" type="text/css" href="../static/styles/home.css">
+</head>
+
+<body>
+    <div class="main">
+        <div class="navbar">
+            <div class="icon">
+                <h2 class="logo">Assumption University of Thailand</h2>
+            </div>
+
+        </div>
+        <div class="content">
+            <h1>Grade Report Generator</h1>
+            <br>
+            <p class="par">A Web Application that automatically generates the grade report
+                <br>of the subjects offered by VMS faculty in a semester.
+            </p>
+        </div>
+
+        <div class="bottomnavbar">
+            <p class="student">By VMS's student from Semester 2/2021 (Senior Project II)</p>
+        </div>
+
+        <form class="form" method="POST">
+            <center>
+                <h2> Login Here </h2>
+
+                <input type="username" name='username' placeholder="Type your username" id="username" required>
+                <input type="password" name='password' placeholder="Type your password" id="password" required>
+                <br><br>
+                <button class="btnn" id="login"> Login </button>
+                <br><br>
+                <div>
+                    {% with messages = get_flashed_messages(with_categories=true) %} {% for category, message in messages %}
+                    <div class="{{ category }}">{{ message }}</div>
+                    {% endfor %} {% endwith %}
+                </div>
+            </center>
+    </div>
+    </form>
+    </div>
+</body>
+
+</html>

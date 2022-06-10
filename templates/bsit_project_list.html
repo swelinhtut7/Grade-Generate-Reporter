@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Grade Report Generator</title>
+
+    <link rel="stylesheet" type="text/css" href="../static/styles/subject_list.css">
+    <link rel="stylesheet" type="text/css" href="../static/styles/navbar.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            var actions = $("table td:last-child").html();
+
+            // Append table with add row form on add new button click
+            $(".add-new").click(function () {
+                $(this).attr("disabled", "disabled");
+                var index = $("table tbody tr:last-child").index();
+                var row = '<tr>' +
+                    '<td><input type="text" class="form-control" name="subjectcode" id="subjectcode" autofocus></td>' +
+                    '<td><input type="text" class="form-control" name="subjectname" id="subjectname"></td>' +
+                    '<td><input type="text" class="form-control" name="section" id="section"></td>' +
+                    '<td>' + actions + '</td>' +
+                    '</tr>';
+                $("table").append(row);
+                $("table tbody tr").eq(index + 1).find(".add, .edit, .delete").toggle();
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+
+            // Add row on add button click
+            $(document).on("click", ".add", function () {
+                var empty = false;
+                var input = $(this).parents("tr").find('input[type="text"]');
+                input.each(function () {
+                    if (!$(this).val()) {
+                        $(this).addClass("error");
+                        empty = true;
+                    } else {
+                        $(this).removeClass("error");
+                    }
+                });
+                var subjectcode = $("#subjectcode").val();
+                var subjectname = $("#subjectname").val();
+                var section = $("#section").val();
+
+                $.post("/BSIT_Add_Project", {
+                    subjectcode: subjectcode,
+                    subjectname: subjectname,
+                    section: section,
+                }, function (data) {
+                    $("#displaymessage").html(data);
+                    $("#displaymessage").show();
+                    location.reload();
+                });
+
+                $(this).parents("tr").find(".error").first().focus();
+                if (!empty) {
+                    input.each(function () {
+                        $(this).parent("td").html($(this).val());
+                    });
+                    $(this).parents("tr").find(".add, .edit").toggle();
+                    $(".add-new").removeAttr("disabled");
+                }
+            });
+
+            // Delete row on delete button click
+            $(document).on("click", ".delete", function () {
+                var result = confirm('Are you sure you want to delete this item');
+                if (result) {
+                    $(this).parents("tr").remove();
+                    $(".add-new").removeAttr("disabled");
+                    var id = $(this).attr("id");
+                    var string = id;
+                    $.post("/BSIT_Delete_Subject", {
+                        string: string
+                    }, function (data) {
+                        $("#displaymessage").html(data);
+                        $("#displaymessage").show();
+                    });
+                }
+                else
+                    return false;
+            });
+
+            // update rec row on edit button click
+            $(document).on("click", ".update", function () {
+                var id = $(this).attr("id");
+                var string = id;
+                var subjectcode = $("#subjectcode").val();
+                var subjectname = $("#subjectname").val();
+                var section = $("#section").val();
+                $.post("/BSIT_Edit_Project", {
+                    string: string,
+                    subjectcode: subjectcode,
+                    subjectname: subjectname,
+                    section: section,
+                }, function (data) {
+                    $("#displaymessage").html(data);
+                    $("#displaymessage").show();
+                    window.location.reload();
+                });
+            });
+
+            // Edit row on edit button click
+            $(document).on("click", ".edit", function () {
+                $(this).parents("tr").find("td:not(:last-child)").each(function (i) {
+                    if (i == '0') {
+                        var idname = 'subjectcode';
+                    } else if (i == '1') {
+                        var idname = 'subjectname';
+                    } else if (i == '2') {
+                        var idname = 'section';
+                    }
+                    else { }
+                    $(this).html('<input type="text" name="updaterec" id="' + idname + '" class="form-control" value="' + $(this).text() + '">');
+                });
+                $(this).parents("tr").find(".add, .edit").toggle();
+                $(".add-new").attr("disabled", "disabled");
+                $(this).parents("tr").find(".add").removeClass("add").addClass("update");
+            });
+        });
+
+    </script>
+
+</head>
+
+<body>
+
+    <form>
+        <nav>
+            <div class="logo"><a href=""><img src="../static/images/logo1.png"></a></div>
+            <form>
+                <a class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    href="">Subject List</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="BSCS_Subject_List">BSCS</a>
+                    <a class="dropdown-item" href="BSIT_Subject_List">BSIT</a>
+                </div>
+            </form>
+
+            <form>
+                <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    href="">Offered Subjects</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="/BSCS_Offer_Subject">BSCS</a>
+                    <a class="dropdown-item" href="/BSIT_Offer_Subject">BSIT</a>
+                </div>
+            </form>
+
+            <form>
+                <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    href="">Codeshare Subjects</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="/Set_Codeshare">Set Codeshare</a>
+                    <a class="dropdown-item" href="/search">Search Codeshare</a>
+                </div>
+            </form>
+
+            <form>
+                <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    href="">Meeting</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="BSCS_Meeting">BSCS</a>
+                    <a class="dropdown-item" href="BSIT_Meeting">BSIT</a>
+                </div>
+            </form>
+
+            <form>
+                <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    href="">Committee Setup</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="BSCS_Committee_Setup">BSCS</a>
+                    <a class="dropdown-item" href="BSIT_Committee_Setup">BSIT</a>
+                </div>
+            </form>
+        </nav>
+    </form>
+
+    <br>
+
+    <form style="width: 30%;" class="input-group sub-search" method="POST">
+        <input id="search_subject" name="search_subject" type="search" id="form1" class="form-control"
+            placeholder="Type Subject ID only to search">
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+
+    <center>
+        <div>
+            {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %}
+            <div class="alert alert-danger" role="alert">{{ message }}</div>
+            {% endfor %} {% endif %} {% endwith %}
+        </div>
+    </center>
+    <br>
+
+    <div class="container">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h2 class='h2style2'>Project List: Bachelor of Science in Information Technology</h2>
+                    </div>
+                    <div class="col-sm-3 add-position">
+                        <button type="button" class="btn btn-primary add-new1"><i class="fa fa-plus"></i> Add
+                            Project</button>
+                    </div>
+                    <div class='btn btn-info' id="displaymessage" style="display:none;width:100%;margin-top:10px;">
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <p class='click-here1'>Go to <a href="/BSIT_Subject_List" style="color:red;text-decoration: underline;">Subject List</a></p>
+            </div>
+
+
+            <table class="table T-position table-bordered" style="width: 85%;">
+                <thead>
+                    <tr style="text-align:center;">
+                        <th style="width:17%;">Subject ID</th>
+                        <th>Subject Name</th>
+                        <th style="width:17%;">Section</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in bsit_project_list %}
+                    <tr>
+                        <td>{{row.subjectcode}}</td>
+                        <td>{{row.subjectname}}</td>
+                        <td style="text-align:center;">{{row.section}}</td>
+                        <td>
+                            <div class="grid-container">
+                                <a class="add" data-toggle="tooltip" id="{{row.subjectcode}}"><i
+                                        class="fa fa-user-plus"></i></a>
+                                <a class="edit" data-toggle="tooltip" id="{{row.subjectcode}}"><i
+                                        class="fa fa-pencil"></i></a>
+                                <a class="delete" data-toggle="tooltip" id="{{row.subjectcode}}"><i
+                                        class="fa fa-trash-o"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</head>
+
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Grade Report Genetor</title>
+
+    <link rel="stylesheet" type="text/css" href="../static/styles/committesetup.css">
+    <link rel="stylesheet" type="text/css" href="../static/styles/navbar.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+            var actions = $("table td:last-child").html();
+            // Append table with add row form on add new button click
+            $(".add-new").click(function() {
+                $(this).attr("disabled", "disabled");
+                var index = $("table tbody tr:last-child").index();
+                var row = '<tr>' +
+                    '<td><input type="text" class="form-control" name="name" id="bsit_committe_name"></td>' +
+                    '<td><input type="text" class="form-control" name="department" id="bsit_committe_role"></td>' +
+                    '<td>' + actions + '</td>' +
+                    '</tr>';
+                $("table").append(row);
+                $("table tbody tr").eq(index + 1).find(".add, .edit, .delete").toggle();
+                $('[data-toggle="tooltip"]').tooltip();
+
+            });
+
+            // Add row on add button click
+            $(document).on("click", ".add", function() {
+                var empty = false;
+                var input = $(this).parents("tr").find('input[type="text"]');
+                input.each(function() {
+                    if (!$(this).val()) {
+                        $(this).addClass("error");
+                        empty = true;
+                    } else {
+                        $(this).removeClass("error");
+                    }
+                });
+                var bsit_committe_name = $("#bsit_committe_name").val();
+                var bsit_committe_role = $("#bsit_committe_role").val();
+                $.post("/BSIT_ADD_Committee", {
+                    bsit_committe_name: bsit_committe_name,
+                    bsit_committe_role: bsit_committe_role,
+                }, function(data) {
+                    $("#displaymessage").html(data);
+                    $("#displaymessage").show();
+                    location.reload();
+                });
+                $(this).parents("tr").find(".error").first().focus();
+                if (!empty) {
+                    input.each(function() {
+                        $(this).parent("td").html($(this).val());
+                    });
+                    $(this).parents("tr").find(".add, .edit").toggle();
+                    $(".add-new").removeAttr("disabled");
+                }
+            });
+
+            // update rec row on edit button click
+            $(document).on("click", ".update", function() {
+                var id = $(this).attr("id");
+                var string = id;
+                var bsit_committe_name = $("#bsit_committe_name").val();
+                var bsit_committe_role = $("#bsit_committe_role").val();
+                $.post("/BSIT_Edit_Committee", {
+                    string: string,
+                    bsit_committe_name: bsit_committe_name,
+                    bsit_committe_role: bsit_committe_role,
+                }, function(data) {
+                    $("#displaymessage").html(data);
+                    $("#displaymessage").show();
+                    location.reload();
+                });
+            });
+
+            // Edit row on edit button click
+            $(document).on("click", ".edit", function() {
+                $(this).parents("tr").find("td:not(:last-child)").each(function(i) {
+                    if (i == '0') {
+                        var idname = 'bsit_committe_name';
+                    } else if (i == '1') {
+                        var idname = 'bsit_committe_role';
+                    } else {}
+                    $(this).html('<input type="text" name="updaterec" id="' + idname + '" class="form-control" value="' + $(this).text() + '">');
+                });
+                $(this).parents("tr").find(".add, .edit").toggle();
+                $(".add-new").attr("disabled", "disabled");
+                $(this).parents("tr").find(".add").removeClass("add").addClass("update");
+            });
+
+            // Delete row on delete button click
+            $(document).on("click", ".delete", function () {
+                var result = confirm('Are you sure you want to delete this item');
+                if (result) {
+                    $(this).parents("tr").remove();
+                    $(".add-new").removeAttr("disabled");
+                    var id = $(this).attr("id");
+                    var string = id;
+                    $.post("/BSIT_Delete_Committee", {
+                        string: string
+                    }, function (data) {
+                        $("#displaymessage").html(data);
+                        $("#displaymessage").show();
+                    });
+                }
+                else
+                    return false;
+            });
+        });
+
+    </script>
+</head>
+
+<body>
+    
+    <form>
+        <nav>
+            <div class="logo"><a href=""><img src="../static/images/logo1.png"></a></div>
+            <form>
+                <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    href="">Subject List</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="BSCS_Subject_List">BSCS</a>
+                    <a class="dropdown-item" href="BSIT_Subject_List">BSIT</a>
+                </div>
+            </form>
+
+            <form>
+                <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    href="">Offered Subjects</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="/BSCS_Offer_Subject">BSCS</a>
+                    <a class="dropdown-item" href="/BSIT_Offer_Subject">BSIT</a>
+                </div>
+            </form>
+
+            <form>
+                <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    href="">Codeshare Subjects</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="/Set_Codeshare">Set Codeshare</a>
+                    <a class="dropdown-item" href="/search">Search Codeshare</a>
+                </div>
+            </form>
+
+            <form>
+                <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">Meeting</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="BSCS_Meeting">BSCS</a>
+                    <a class="dropdown-item" href="BSIT_Meeting">BSIT</a>
+                </div>
+            </form>
+            
+            <form>
+                <a class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    href="">Committee Setup</a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="BSCS_Committee_Setup">BSCS</a>
+                    <a class="dropdown-item" href="BSIT_Committee_Setup">BSIT</a>
+                </div>
+            </form>
+        </nav>
+    </form>
+    
+    <br>
+    
+    <center>
+        <div>
+            {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %}
+            <div class="alert alert-danger" role="alert">{{ message }}</div>
+            {% endfor %} {% endif %} {% endwith %}
+        </div>
+    </center>
+
+    <div class="container">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h2 class='it-h2style'>Bachelor of Science in Information Technology</h2>
+                    </div>
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-primary add-new"><i class="fa fa-plus"></i> Add New</button>
+                    </div>
+                    <div class='btn btn-info' id="displaymessage" style="display:none;width:100%;margin-top:10px;"></div>
+                </div>
+            </div>
+            <table class="table table-bordered">
+                <thead style='height:50px; font-size:15px;'>
+                    <tr>
+                        <th>Member Name</th>
+                        <th>Member Role</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in bsit_committee_all_list %}
+                    <tr style='font-size:14px;'>
+                        <td style='height:50px;'>{{row.committee_name}}</td>
+                        <td>{{row.committee_role}}</td>
+                        <td>
+                            <div class="grid-container">
+                                <a class="add" data-toggle="tooltip" id="{{row.committee_name}}"><i class="fa fa-user-plus"></i></a>
+                                <a class="edit" data-toggle="tooltip" id="{{row.committee_name}}"><i class="fa fa-pencil"></i></a>
+                                <a class="delete" data-toggle="tooltip" id="{{row.committee_name}}"><i class="fa fa-trash-o"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+
+</html>

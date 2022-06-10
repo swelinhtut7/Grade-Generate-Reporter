@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<page size="A3">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Grade Generator</title>
+
+        <link rel="stylesheet" type="text/css" href="../static/styles/form.css">
+        <link rel="stylesheet" type="text/css" href="../static/styles/meetingcommittee.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    </head>
+
+    <script>
+        function printFunction() {
+            window.print();
+        }
+
+    </script>
+
+    <body>
+        <p class="left">Assumption University</p>
+        <p class="right">Assumption University</p>
+        <br><br><br>
+        <center>
+            <div>
+                {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %}
+                <div class="alert alert-danger" role="alert">{{ message }}</div>
+                {% endfor %} {% endif %} {% endwith %}
+            </div>
+        </center>
+        <img src="../static/images/au.png" alt="logo" class="img-logo">
+
+        <p class="center">
+            The Meeting of Academic Standard Committees
+            <br>
+            Bachelor of Science Program in Computer Science
+        </p>
+        <br>
+        {% for row in meeting_lists %}
+        <form action="" class="meeting-cover">
+            <ul>
+                <dt>
+                    Subject: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>Approval of Examination Results</u>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Semester: &nbsp;&nbsp;&nbsp;<u>{{row.semester}}</u>
+                </dt>
+                <dt>Date:
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>{{row.date}}</u>
+                </dt>
+                <dt>Time:
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>{{row.time}}</u>
+                </dt>
+                <dt>Place: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<u>{{row.venue}}</u>
+                </dt>
+            </ul>
+        </form>
+        {% endfor %}
+<br>
+        <h3 class="cover-committe-heading">
+            Committees
+        </h3>
+        <table class="table table-borderless com-table" style="width: 85%;">
+            <thead>
+                <tr>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <ol class="line">
+                            <li>
+                                Asst. Prof. Dr. Thitipong Tanprasert &nbsp;&nbsp;&nbsp;&nbsp;____________________________________ &nbsp;&nbsp;&nbsp;&nbsp;Chairperson
+                            </li>
+                            <li>
+                                Mr. Suparwat Charoenvikrom &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;____________________________________ &nbsp;&nbsp;&nbsp;&nbsp;Member
+                            </li>
+                            <li>
+                                Mr. Pawut Satitsuksanoe	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;____________________________________	&nbsp;&nbsp;&nbsp;&nbsp; Member
+                            </li>
+                            <li>
+                                Ms. Piyakul Tillapat &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;____________________________________ &nbsp;&nbsp;&nbsp;&nbsp;Member
+                            </li>
+                            <li>
+                                Asst. Prof. Dr. Paitoon Porntrakoon &nbsp;&nbsp;&nbsp;&nbsp;____________________________________ &nbsp;&nbsp;&nbsp;Member and Secretary
+                            </li>
+                            <li>
+                                Ms. Chonticha Rungrueng &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;____________________________________ &nbsp;&nbsp;&nbsp;Assistant Secretary
+                            </li>
+                        </ol>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <center>
+            <form action='/BSCS_Meeting' method="POST">
+                <button type='submit' class="btn btn-primary final-page-btn1">Cancel</button>
+            </form>
+
+            <form action="{{ url_for('CoverPage') }}" method="POST">
+                <button class="btn btn-primary final-page-btn2" type="submit" name="download" id="download"
+                    value="download" onclick="printFunction()"> Print</button>
+            </form>
+        </center>
+    </body>
+</page>
+
+</html>

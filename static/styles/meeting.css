@@ -1,0 +1,222 @@
+.h2style {
+    font-size: 24px;
+    font-family: 'Tahoma', Times, serif;
+    /* font-family: 'Cherry Swash', cursive; */
+    font-weight: bold;
+    color: #2c56b3;
+    position: relative;
+    margin-left: 17.5%;
+    margin-top: 4.5%;
+}
+
+.it-h2style {
+    font-size: 24px;
+    font-family: 'Tahoma', Times, serif;
+    /* font-family: 'Cherry Swash', cursive; */
+    font-weight: bold;
+    color: #2c56b3;
+    position: relative;
+    margin-left: 17.5%;
+    margin-top: 4.5%;
+    width: 100%;
+}
+
+.meeting-btn{
+    float: right;
+    height: 34px;
+    font-size: 12px;
+    text-shadow: none;
+    min-width: 100px;
+    border-radius: 10px;
+    line-height: 13px;
+    margin-top: 3%;
+    margin-left: 18%;
+}
+
+.meeting-table{
+    position: relative;
+    left: 1%;
+}
+
+.form-check-label:hover{
+    color:rgb(30, 30, 107);
+}
+
+.h2style2 {
+    font-size: 20px;
+    font-family: 'Times New Roman', Times, serif;
+    /* font-family: 'Cherry Swash', cursive; */
+    position: relative;
+    margin-left: 6%;
+    font-weight: bold;
+}
+
+th,
+td {
+    position: relative;
+    left: 2%;
+    font-size: 16px;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    color: #1a1f36;
+    box-sizing: border-box;
+    word-wrap: break-word;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Ubuntu, sans-serif;
+}
+
+a {
+    color: #5469d4;
+    text-decoration: unset;
+}
+
+span {
+    display: block;
+    font-size: 20px;
+    line-height: 28px;
+    color: #1a1f36;
+}
+
+/*For Table*/
+.table-wrapper {
+    width: 800px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+}
+
+.table-title {
+    padding-bottom: 10px;
+    margin: 0 0 10px;
+}
+
+.table-title h2 {
+    margin: 6px 0 0;
+    font-size: 22px;
+    margin-top: 2%;
+}
+
+.table-title .add-new i {
+    margin-right: 4px;
+}
+
+table.table {
+    table-layout: fixed;
+    margin-left: 9%;
+    text-align: center;
+    margin-top: -1%;
+}
+
+table.table tr th,
+table.table tr td {
+    border-color: #e9e9e9;
+}
+
+table.table th i {
+    font-size: 13px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+table.table th:last-child {
+    width: 100px;
+}
+
+table.table td a {
+    cursor: pointer;
+    display: inline-block;
+    margin: 0 5px;
+    min-width: 24px;
+}
+
+table.table td a.add i {
+    font-size: 24px;
+    margin-right: -1px;
+    position: relative;
+    top: 3px;
+}
+
+table.table .form-control {
+    height: 32px;
+    line-height: 32px;
+    box-shadow: none;
+    border-radius: 2px;
+}
+
+table.table .form-control.error {
+    border-color: #f50000;
+}
+
+table.table td .add {
+    display: none;
+}
+
+table.table td .edit {
+    position:static;
+    height: 15px;
+    width: 20px;
+}
+
+table.table td .delete {
+    position: relative;
+    height: 15px;
+    width: 20px;
+}
+
+.btn-link {
+    margin-top: -7%;
+}
+
+.grid-container {
+    margin-left: 20%;
+    margin-bottom: 10%;
+    display: grid;
+    grid-template-columns: 5ch auto;
+}
+
+form {
+    display: inline; 
+}
+
+.details-position{
+    position: absolute;
+    top: -30%;
+    left: 6%;
+}
+
+.det{
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+}
+
+.det:hover{
+    font-size: 18px;
+}
+
+.aprimary{
+    position: relative;
+    left: -35%;
+}
+
+.eprimary {
+    margin-left: 50%;
+}
+
+.dprimary {
+    margin-left: 50%;
+}
+
+.btn-print{
+    position: absolute;
+    left: 86%;
+    font-size: 14px;
+    margin-top: 13.5%;
+    width: 70px;
+    font-family: 'Times New Roman', Times, serif;
+    height: 37px;
+    letter-spacing: 1px;
+}
+

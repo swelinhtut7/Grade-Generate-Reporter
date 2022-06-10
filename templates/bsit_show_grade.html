@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Grade Report Generator</title>
+  <link rel="stylesheet" type="text/css" href="../static/styles/subject_list.css">
+  <link rel="stylesheet" type="text/css" href="../static/styles/navbar.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+  <form>
+    <nav>
+      <div class="logo"><a href=""><img src="../static/images/logo1.png"></a></div>
+      <form>
+        <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">Subject
+          List</a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="BSCS_Subject_List">BSCS</a>
+          <a class="dropdown-item" href="BSIT_Subject_List">BSIT</a>
+        </div>
+      </form>
+
+      <form>
+        <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">Offered
+          Subjects</a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="/BSCS_Offer_Subject">BSCS</a>
+          <a class="dropdown-item" href="/BSIT_Offer_Subject">BSIT</a>
+        </div>
+      </form>
+
+      <form>
+        <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">Codeshare
+          Subjects</a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="/Set_Codeshare">Set Codeshare</a>
+          <a class="dropdown-item" href="/search">Search Codeshare</a>
+        </div>
+      </form>
+
+      <form>
+        <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">Meeting</a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="BSCS_Meeting">BSCS</a>
+          <a class="dropdown-item" href="BSIT_Meeting">BSIT</a>
+        </div>
+      </form>
+
+      <form>
+        <a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="">Committee
+          Setup</a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item" href="BSCS_Committee_Setup">BSCS</a>
+          <a class="dropdown-item" href="BSIT_Committee_Setup">BSIT</a>
+        </div>
+      </form>
+    </nav>
+  </form>
+
+  {% for row in CodeshareResult %}
+  <h2 class='show-grade-heading'>Default/Original Grade For {{row.subjectcode}}&nbsp; {{row.subjectname}}</h2>
+
+  <form action="/BSIT_Meeting_Detail" method="POST">
+    <button type="submit" class="btn btn-outline-dark show-grade-back"><i class="fa fa-arrow-left"></i> Back</button>
+  </form>
+
+  
+  <form action="/BSIT_SetGrade" method="POST">
+    <table class="table table-bordered show-grade-table" style="width: 50%;">
+      <tr class="show-table-header">
+        <th style="width:15%;">Minimum Range</th>
+        <th style="width:15%;">Maximum Range</th>
+        <th style="width:10%;">Grade</th>
+        <th style="width:15%;">Number of Students</th>
+      </tr>
+
+      <tr>
+        <td>{{row['A_min']}}</td>
+        <td>{{row['A_max']}}</td>
+        <td>A</td>
+        <td>{{row['A_students']}}</td>
+      </tr>
+      <tr>
+        <td>{{row['A_minus_min']}}</td>
+        <td>{{row['A_minus_max']}}</td>
+        <td>A-</td>
+        <td>{{row['A_minus_students']}}</td>
+      </tr>
+      <tr>
+        <td>{{row['B_plus_min']}}</td>
+        <td>{{row['B_plus_max']}}</td>
+        <td>B+</td>
+        <td>{{row['B_plus_students']}}</td>
+      </tr>
+      <tr>
+        <td>{{row['B_min']}}</td>
+        <td>{{row['B_max']}}</td>
+        <td>B</td>
+        <td>{{row['B_students']}}</td>
+      </tr>
+      <tr>
+        <td>{{row['B_minus_min']}}</td>
+        <td>{{row['B_minus_min']}}</td>
+        <td>B-</td>
+        <td>{{row['B_minus_students']}}</td>
+      </tr>
+      <tr>
+        <td>{{row['C_plus_min']}}</td>
+        <td>{{row['C_plus_max']}}</td>
+        <td>C+</td>
+        <td>{{row['C_plus_students']}}</td>
+      </tr>
+      <tr>
+        <td>{{row['C_min']}}</td>
+        <td>{{row['C_max']}}</td>
+        <td>C</td>
+        <td>{{row['C_students']}}</td>
+      </tr>
+      <tr>
+        <td>{{row['C_minus_min']}}</td>
+        <td>{{row['C_minus_max']}}</td>
+        <td>C-</td>
+        <td>{{row['C_minus_students']}}</td>
+      </tr>
+      <tr>
+        <td>{{row['D_min']}}</td>
+        <td>{{row['D_max']}}</td>
+        <td>D</td>
+        <td>{{row['D_students']}}</td>
+      </tr>
+      <tr>
+        <td>{{row['F_min']}}</td>
+        <td>{{row['F_max']}}</td>
+        <td>F</td>
+        <td>{{row['F_students']}}</td>
+      </tr>
+      <tr>
+        <td>{{row['I_min']}}</td>
+        <td>{{row['I_max']}}</td>
+        <td>I</td>
+        <td>{{row['I_students']}}</td>
+      </tr>
+      <tr>
+        <td>{{row['W_min']}}</td>
+        <td>{{row['W_max']}}</td>
+        <td>W</td>
+        <td>{{row['W_students']}}</td>
+      </tr>
+      <tr>
+        <td>-</td>
+        <td>-</td>
+        <td><b>Total</b></td>
+        <td>{{ defult_total_students }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+
+    <button type="submit" class="btn btn-primary EditDefGrade" name="EditDefGrade" id="EditDefGrade">Edit</button>
+
+    {% for row in modify_grade %}
+    <h2 class='show-grade-heading2'>Modify or Change Grade</h2>
+    <table class="table table-bordered show-grade-table" style="width: 50%;">
+      <tr class="show-table-header">
+        <th style="width:15%;">Minimum Range</th>
+        <th style="width:15%;">Maximum Range</th>
+        <th style="width:10%;">Grade</th>
+        <th style="width:15%;">Number of Students</th>
+      </tr>
+
+      <tr>
+        <td>{{row['A_min']}}</td>
+        <td>{{row['A_max']}}</td>
+        <td>A</td>
+        <td>{{row['A_students']}}</td>
+      </tr>
+      <tr>
+        <td>{{row['A_minus_min']}}</td>
+        <td>{{row['A_minus_max']}}</td>
+        <td>A-</td>
+        <td>{{row['A_minus_students']}}</td>
+      </tr>
+      <tr>
+        <td>{{row['B_plus_min']}}</td>
+        <td>{{row['B_plus_max']}}</td>
+        <td>B+</td>
+        <td>{{row['B_plus_students']}}</td>
+      </tr>
+      <tr>
+        <td>{{row['B_min']}}</td>
+        <td>{{row['B_max']}}</td>
+        <td>B</td>
+        <td>{{row['B_students']}}</td>
+      </tr>
+      <tr>
+        <td>{{row['B_minus_min']}}</td>
+        <td>{{row['B_minus_min']}}</td>
+        <td>B-</td>
+        <td>{{row['B_minus_students']}}</td>
+      </tr>
+      <tr>
+        <td>{{row['C_plus_min']}}</td>
+        <td>{{row['C_plus_max']}}</td>
+        <td>C+</td>
+        <td>{{row['C_plus_students']}}</td>
+      </tr>
+      <tr>
+        <td>{{row['C_min']}}</td>
+        <td>{{row['C_max']}}</td>
+        <td>C</td>
+        <td>{{row['C_students']}}</td>
+      </tr>
+      <tr>
+        <td>{{row['C_minus_min']}}</td>
+        <td>{{row['C_minus_max']}}</td>
+        <td>C-</td>
+        <td>{{row['C_minus_students']}}</td>
+      </tr>
+      <tr>
+        <td>{{row['D_min']}}</td>
+        <td>{{row['D_max']}}</td>
+        <td>D</td>
+        <td>{{row['D_students']}}</td>
+      </tr>
+      <tr>
+        <td>{{row['F_min']}}</td>
+        <td>{{row['F_max']}}</td>
+        <td>F</td>
+        <td>{{row['F_students']}}</td>
+      </tr>
+      <tr>
+        <td>{{row['I_min']}}</td>
+        <td>{{row['I_max']}}</td>
+        <td>I</td>
+        <td>{{row['I_students']}}</td>
+      </tr>
+      <tr>
+        <td>{{row['W_min']}}</td>
+        <td>{{row['W_max']}}</td>
+        <td>W</td>
+        <td>{{row['W_students']}}</td>
+      </tr>
+      <tr>
+        <td>-</td>
+        <td>-</td>
+        <td><b>Total</b></td>
+        <td>{{ modify_total_students }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+
+  </form>
+
+  <center>
+
+    <form action="{{ url_for('BSIT_Show_Grade') }}" method="POST">
+      <button type="submit" class="btn btn-primary" name="btn_approved" value="btn_approved"> Approved </button>
+    </form>
+
+    <form action="/BSIT_Grade_Change" method="POST">
+      <button type="submit" class="btn btn-primary" name="btn_changed"> Change </button>
+    </form>
+
+  </center>
+
+  <br>
+
+</body>
+
+</html>
